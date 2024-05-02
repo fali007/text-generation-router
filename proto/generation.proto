@@ -8,7 +8,7 @@ package fmaas;
 
 service GenerationService {
   // Generates text given a text prompt, for one or more inputs
-  rpc Generate (BatchedGenerationRequest) returns (BatchedGenerationResponse) {}
+  rpc Generate (BatchedGenerationRequestUser) returns (BatchedGenerationResponse) {}
   // Generates text given a single input prompt, streaming the response
   rpc GenerateStream (SingleGenerationRequest) returns (stream GenerationResponse) {}
   // Tokenize text
@@ -31,6 +31,11 @@ message BatchedGenerationRequest {
   repeated GenerationRequest requests = 3;
 
   Parameters params = 10;
+}
+
+message BatchedGenerationRequestUser {
+  BatchedGenerationRequest generationRequest = 1;
+  string user_id = 2;
 }
 
 message SingleGenerationRequest {

@@ -6,7 +6,7 @@ use tracing::{debug, instrument};
 
 use crate::{pb::fmaas::{
     generation_service_client::GenerationServiceClient,
-    generation_service_server::GenerationService, BatchedGenerationRequest,
+    generation_service_server::GenerationService, BatchedGenerationRequestUser,
     BatchedGenerationResponse, BatchedTokenizeRequest, BatchedTokenizeResponse,
     GenerationResponse, ModelInfoRequest, ModelInfoResponse, SingleGenerationRequest,
 }, create_clients, ServiceAddr, tracing_utils::{ExtractTelemetryContext, InjectTelemetryContext}};
@@ -44,9 +44,9 @@ impl GenerationServicer {
 impl GenerationService for GenerationServicer {
     async fn generate(
         &self,
-        request: Request<BatchedGenerationRequest>,
+        request: Request<BatchedGenerationRequestUser>,
     ) -> Result<Response<BatchedGenerationResponse>, Status> {
-        let br = request.get_ref();
+        let br = request.generationRequest.get_ref();
         if br.requests.is_empty() {
             return Ok(Response::new(BatchedGenerationResponse {
                 responses: vec![],
@@ -65,7 +65,7 @@ impl GenerationService for GenerationServicer {
         let request = request
             .extract_context_span(&mut span)
             .inject_context_span(&span); // Inject span info into request metadata
-        client.generate(request).await
+        client.generate(request.generationRequest).await
     }
 
     type GenerateStreamStream = Streaming<GenerationResponse>;
