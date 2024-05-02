@@ -34,7 +34,7 @@ message BatchedGenerationRequest {
 }
 
 message BatchedGenerationRequestUser {
-  BatchedGenerationRequest generationRequest = 1;
+  BatchedGenerationRequest gen_request = 1;
   string user_id = 2;
 }
 

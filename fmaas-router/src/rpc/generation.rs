@@ -46,7 +46,7 @@ impl GenerationService for GenerationServicer {
         &self,
         request: Request<BatchedGenerationRequestUser>,
     ) -> Result<Response<BatchedGenerationResponse>, Status> {
-        let br = request.generationRequest.get_ref();
+        let br = request.gen_request.get_ref();
         if br.requests.is_empty() {
             return Ok(Response::new(BatchedGenerationResponse {
                 responses: vec![],
@@ -65,7 +65,7 @@ impl GenerationService for GenerationServicer {
         let request = request
             .extract_context_span(&mut span)
             .inject_context_span(&span); // Inject span info into request metadata
-        client.generate(request.generationRequest).await
+        client.generate(request.gen_request).await
     }
 
     type GenerateStreamStream = Streaming<GenerationResponse>;
