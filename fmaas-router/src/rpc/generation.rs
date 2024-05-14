@@ -52,19 +52,23 @@ impl GenerationService for GenerationServicer {
                 responses: vec![],
             }));
         }
-        debug!("Routing generation request for Model ID {}", &br.model_id);
-        let mut client = self.client(&br.model_id).await?;
+        debug!("Routing generation request for User ID {}", &br.user_id);
+        let mut client = self.client(&br.user_id).await?;
         let mut span = tracing::info_span!(
             "fmaas.GenerationService/Generate",
             rpc.system = "grpc",
             rpc.method = "Generate",
             rpc.service = "GenerationService",
-            model_id = br.model_id
+            user_id = br.user_id
         );
         // Extract span info from the request metadata and set to current span
         let request = request
             .extract_context_span(&mut span)
             .inject_context_span(&span); // Inject span info into request metadata
+        
+        // If request belongs to priority class send immediately.
+        // Else add time delay
+
         client.generate(request).await
     }
 

@@ -47,6 +47,8 @@ fn main() -> Result<(), std::io::Error> {
     // Load model map config
     let model_map = ModelMap::load(args.model_map_config);
 
+    
+
     // Launch Tokio runtime
     tokio::runtime::Builder::new_multi_thread()
         .enable_all()
