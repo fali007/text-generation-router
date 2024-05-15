@@ -254,3 +254,9 @@ message ModelInfoResponse {
   // max_sequence_length for beam requests, where index into the list is the beam width
   repeated uint32 max_beam_sequence_lengths = 5;
 }
+
+message RunningParamsInfoRequest {}
+message RunningParamsInfoResponse {
+  uint32 queue_length = 1;
+  uint32 batch_size = 2;
+}
